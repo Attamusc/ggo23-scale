@@ -1,0 +1,45 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'ggo23-scale'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=ggo23-scale",
+          "--package=ggo23-scale"
+        ],
+        "filter": {
+          "name": "ggo23-scale",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'ggo23-scale'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=ggo23-scale",
+          "--package=ggo23-scale"
+        ],
+        "filter": {
+          "name": "ggo23-scale",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
