@@ -2,9 +2,11 @@ use bevy::input::common_conditions::input_toggle_active;
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
+use crate::enemies::plugin::EnemyPlugin;
 use crate::movable::plugin::MovablePlugin;
 use crate::player::plugin::PlayerPlugin;
 
+mod enemies;
 mod movable;
 mod player;
 
@@ -44,8 +46,9 @@ fn main() {
         .add_plugins(
             WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Grave)),
         )
-        .add_plugins(PlayerPlugin)
         .add_plugins(MovablePlugin)
+        .add_plugins(PlayerPlugin)
+        .add_plugins(EnemyPlugin)
         .add_systems(Startup, setup)
         .add_systems(Update, bevy::window::close_on_esc)
         .run();

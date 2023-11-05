@@ -35,26 +35,6 @@ fn setup_player(mut commands: Commands, asset_server: Res<AssetServer>) {
         Player,
         Name::new("Player"),
     ));
-
-    commands.spawn((
-        SpriteBundle {
-            sprite: Sprite {
-                custom_size: Some(Vec2::new(64.0, 64.0)),
-                ..default()
-            },
-            texture: texture.clone(),
-            ..default()
-        },
-        GridPosition {
-            x: 0,
-            y: 0,
-            xr: 0.0,
-            yr: 0.0,
-        },
-        Velocity { x: 1.0, y: 0.0 },
-        Movable { speed: 3.0 },
-        Name::new("Movable"),
-    ));
 }
 
 fn process_input(
