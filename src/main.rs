@@ -1,59 +1,41 @@
-use bevy::input::common_conditions::input_toggle_active;
+use crate::globals::{WORLD_HEIGHT, WORLD_WIDTH};
 use bevy::prelude::*;
-use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::enemies::plugin::EnemyPlugin;
-use crate::movable::plugin::MovablePlugin;
-use crate::player::plugin::PlayerPlugin;
-
+mod camera;
+mod debug;
 mod enemies;
+mod globals;
+mod grid;
+mod level;
 mod movable;
 mod player;
-
-const GRID_CELL_SIZE: f32 = 64.0;
-
-#[derive(Component, Default, Reflect)]
-#[reflect(Component)]
-pub struct GridWorld;
-
-#[derive(Component, Default, Reflect)]
-#[reflect(Component)]
-pub struct GridPosition {
-    pub x: i16,
-    pub y: i16,
-    pub xr: f32,
-    pub yr: f32,
-}
+mod states;
 
 fn main() {
-    App::new()
-        .add_plugins(
-            DefaultPlugins
-                .set(ImagePlugin::default_nearest())
-                .set(WindowPlugin {
-                    primary_window: Some(Window {
-                        title: "ggo23-scale".into(),
-                        resolution: (1280.0, 720.0).into(),
-                        resizable: false,
-                        ..default()
-                    }),
-                    ..default()
-                })
-                .build(),
-        )
-        .register_type::<GridWorld>()
-        .register_type::<GridPosition>()
-        .add_plugins(
-            WorldInspectorPlugin::default().run_if(input_toggle_active(true, KeyCode::Grave)),
-        )
-        .add_plugins(MovablePlugin)
-        .add_plugins(PlayerPlugin)
-        .add_plugins(EnemyPlugin)
-        .add_systems(Startup, setup)
-        .add_systems(Update, bevy::window::close_on_esc)
-        .run();
-}
+    #[cfg(target_arch = "wasm32")]
+    console_error_panic_hook::set_once();
 
-fn setup(mut commands: Commands) {
-    commands.spawn(Camera2dBundle::default());
+    App::new()
+        .add_plugins((DefaultPlugins
+            .set(ImagePlugin::default_nearest())
+            .set(WindowPlugin {
+                primary_window: Some(Window {
+                    title: "ggo23-scale".into(),
+                    resolution: (WORLD_WIDTH, WORLD_HEIGHT).into(),
+                    resizable: false,
+                    ..default()
+                }),
+                ..default()
+            })
+            .build(),))
+        .add_state::<states::GameState>()
+        .add_systems(Update, bevy::window::close_on_esc)
+        .add_plugins(level::LevelPlugin)
+        .add_plugins(debug::DebugPlugin)
+        .add_plugins(camera::CameraPlugin)
+        .add_plugins(grid::GridWorldPlugin)
+        .add_plugins(movable::MovablePlugin)
+        .add_plugins(player::PlayerPlugin)
+        .add_plugins(enemies::EnemyPlugin)
+        .run();
 }
