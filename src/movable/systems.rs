@@ -12,19 +12,19 @@ pub fn calculate_velocity(mut movables: Query<(&mut Velocity, &Movable, &Directi
         if direction.y != 0 {
             velocity.y = direction.y as f32 * movable.speed;
         }
-    }
-}
 
-pub fn move_movable(mut movables: Query<(&mut GridPosition, &mut Velocity)>, time: Res<Time>) {
-    for (mut gpos, mut velocity) in &mut movables {
-        if velocity.x != 0. && velocity.y != 0. {
-            velocity.x *= 1. / std::f32::consts::SQRT_2;
-            velocity.y *= 1. / std::f32::consts::SQRT_2;
+        if direction.x != 0 && direction.y != 0 {
+            velocity.x /= std::f32::consts::SQRT_2;
+            velocity.y /= std::f32::consts::SQRT_2;
         }
 
         velocity.x *= FRICTION;
         velocity.y *= FRICTION;
+    }
+}
 
+pub fn move_movable(mut movables: Query<(&mut GridPosition, &Velocity)>, time: Res<Time>) {
+    for (mut gpos, velocity) in &mut movables {
         gpos.ratio.x += velocity.x * time.delta_seconds();
         gpos.ratio.y += velocity.y * time.delta_seconds();
 
